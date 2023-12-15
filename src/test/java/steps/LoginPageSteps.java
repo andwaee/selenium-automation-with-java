@@ -6,40 +6,31 @@ import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
+import pages.HomePage;
 import pages.LoginPage;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class LoginPageSteps {
     Scenario scenario;
-    private LoginPage loginpage = new LoginPage();
+    private LoginPage loGinpage = new LoginPage();
+    private HomePage homePage = new HomePage();
     private CommonUtil util = new CommonUtil();
 
     @Before
     public void before(Scenario scenario) {
         this.scenario = scenario;
-        loginpage.setScenario(scenario);
+        loGinpage.setScenario(scenario);
+        loGinpage.getDriver().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
 
-    @Given("^user is in the product Home Page$")
-    public void userInProductHomepage() throws InterruptedException {
-        loginpage.inputCredentials("standard_user", "secret_sauce");
-    }
-
-    @Given("^user is successfully logged in$")
-    public void userSuccessfullyLoggedIn() throws InterruptedException {
-        loginpage.inputCredentials("standard_user", "secret_sauce");
-    }
-
-    @Given("^user is on login Page$")
-    public void userIsInLoginPage() {
-        loginpage.validateLoginPage();
-    }
-
-    @When("^user enters username and password$")
+    @Given("^user has logged in and is on the homepage$")
     public void userLoginWithCredentials() throws InterruptedException, IOException {
+        loGinpage.isUserOnLoginPage();
         String username  = util.testDataHandler("username");
         String password  = util.testDataHandler("password");
-        loginpage.inputCredentials(username, password);
+        loGinpage.inputCredentials(username, password);
+        homePage.isUserOnHomePage();
     }
 
 }
